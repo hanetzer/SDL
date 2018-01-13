@@ -1600,7 +1600,7 @@ listtostr(EXTRA_CFLAGS _EXTRA_CFLAGS)
 set(EXTRA_CFLAGS ${_EXTRA_CFLAGS})
 
 # Compat helpers for the configuration files
-if(NOT WINDOWS OR CYGWIN)
+if(NOT MSVC)
   # TODO: we need a Windows script, too
   execute_process(COMMAND sh ${SDL2_SOURCE_DIR}/build-scripts/updaterev.sh)
 
@@ -1790,18 +1790,18 @@ endforeach()
 list(APPEND INCLUDE_FILES ${BIN_INCLUDE_FILES})
 install(FILES ${INCLUDE_FILES} DESTINATION include/SDL2)
 
-if(NOT (WINDOWS OR CYGWIN))
-  if(SDL_SHARED)
-    if (APPLE)
-        set(SOEXT "dylib")
-    else()
-        set(SOEXT "so")
-    endif()
-    install(CODE "
-      execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
-      \"libSDL2-2.0.${SOEXT}\" \"libSDL2.${SOEXT}\")")
-    install(FILES ${SDL2_BINARY_DIR}/libSDL2.${SOEXT} DESTINATION "lib${LIB_SUFFIX}")
+if(SDL_SHARED AND NOT WINDOWS)
+  if (APPLE)
+      set(SOEXT "dylib")
+  else()
+      set(SOEXT "so")
   endif()
+  install(CODE "
+    execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
+    \"libSDL2-2.0.${SOEXT}\" \"libSDL2.${SOEXT}\")")
+  install(FILES ${SDL2_BINARY_DIR}/libSDL2.${SOEXT} DESTINATION "lib${LIB_SUFFIX}")
+endif()
+if(NOT MSVC)
   if(FREEBSD)
     # FreeBSD uses ${PREFIX}/libdata/pkgconfig
     install(FILES ${SDL2_BINARY_DIR}/sdl2.pc DESTINATION "libdata/pkgconfig")
