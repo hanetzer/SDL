@@ -11,3 +11,6 @@ build_script:
 - cmake ..
 - cmake --build . --config Release --clean-first
 - cd ..
+
+# 64-bit mingw-w64
+- C:\cygwin64\bin\sh -c "export PATH=/usr/bin:/usr/local/bin:$PATH && mkdir x86_64 && cd x86_64 && cmake .. -DCMAKE_INSTALL_PREFIX=/usr -DCMAKE_TOOLCHAIN_FILE=../cross/x86_64-w64-mingw32.cmake -G'Unix Makefiles' && make VERBOSE=1 -r && cd .."
