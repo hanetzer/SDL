@@ -1726,8 +1726,9 @@ endif()
 if(SDL_STATIC)
   set (BUILD_SHARED_LIBS FALSE)
   add_library(SDL2-static STATIC ${SOURCE_FILES})
-  if (NOT SDL_SHARED OR NOT WIN32)
-    set_target_properties(SDL2-static PROPERTIES OUTPUT_NAME "SDL2")
+  set_target_properties(SDL2-static PROPERTIES OUTPUT_NAME "SDL2")
+  if (MSVC)
+    set_target_properties(SDL2-static PROPERTIES PREFIX "lib")
     # Note: Apparently, OUTPUT_NAME must really be unique; even when
     # CMAKE_IMPORT_LIBRARY_SUFFIX or the like are given. Otherwise
     # the static build may race with the import lib and one will get
