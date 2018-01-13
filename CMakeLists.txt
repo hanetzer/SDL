@@ -1749,17 +1749,17 @@ endif()
 
 ##### Installation targets #####
 install(TARGETS ${_INSTALL_LIBS} EXPORT SDL2Targets
-  LIBRARY DESTINATION "lib${LIB_SUFFIX}"
-  ARCHIVE DESTINATION "lib${LIB_SUFFIX}"
-  RUNTIME DESTINATION bin)
+  LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
 
 ##### Export files #####
 if (APPLE)
   set(PKG_PREFIX "SDL2.framework/Resources")
-elseif (WINDOWS)
+elseif (MSVC)
   set(PKG_PREFIX "cmake")
 else ()
-  set(PKG_PREFIX "lib/cmake/SDL2")
+  set(PKG_PREFIX "${CMAKE_INSTALL_LIBDIR}/cmake/SDL2")
 endif ()
 
 include(CMakePackageConfigHelpers)
@@ -1788,7 +1788,7 @@ foreach(_FNAME ${BIN_INCLUDE_FILES})
   list(REMOVE_ITEM INCLUDE_FILES ${SDL2_SOURCE_DIR}/include/${_INCNAME})
 endforeach()
 list(APPEND INCLUDE_FILES ${BIN_INCLUDE_FILES})
-install(FILES ${INCLUDE_FILES} DESTINATION include/SDL2)
+install(FILES ${INCLUDE_FILES} DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/SDL2)
 
 if(SDL_SHARED AND NOT WINDOWS)
   if (APPLE)
@@ -1799,7 +1799,7 @@ if(SDL_SHARED AND NOT WINDOWS)
   install(CODE "
     execute_process(COMMAND ${CMAKE_COMMAND} -E create_symlink
     \"libSDL2-2.0.${SOEXT}\" \"libSDL2.${SOEXT}\")")
-  install(FILES ${SDL2_BINARY_DIR}/libSDL2.${SOEXT} DESTINATION "lib${LIB_SUFFIX}")
+  install(FILES ${SDL2_BINARY_DIR}/libSDL2.${SOEXT} DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 if(NOT MSVC)
   if(FREEBSD)
@@ -1807,9 +1807,9 @@ if(NOT MSVC)
     install(FILES ${SDL2_BINARY_DIR}/sdl2.pc DESTINATION "libdata/pkgconfig")
   else()
     install(FILES ${SDL2_BINARY_DIR}/sdl2.pc
-      DESTINATION "lib${LIB_SUFFIX}/pkgconfig")
+      DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
   endif()
-  install(PROGRAMS ${SDL2_BINARY_DIR}/sdl2-config DESTINATION bin)
+  install(PROGRAMS ${SDL2_BINARY_DIR}/sdl2-config DESTINATION ${CMAKE_INSTALL_BINDIR})
   # TODO: what about the .spec file? Is it only needed for RPM creation?
   install(FILES "${SDL2_SOURCE_DIR}/sdl2.m4" DESTINATION "${CMAKE_INSTALL_FULL_DATAROOTDIR}/aclocal")
 endif()
