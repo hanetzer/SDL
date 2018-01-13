@@ -1,0 +1,13 @@
+version: 2.0.7.{build}
+
+image:
+- Visual Studio 2015
+
+build_script:
+
+# Visual Studio MSVC
+- mkdir msvc
+- cd msvc
+- cmake ..
+- cmake --build . --config Release --clean-first
+- cd ..
